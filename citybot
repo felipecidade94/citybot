@@ -1,4 +1,3 @@
-```python
 import os
 import sqlite3
 import cv2
@@ -263,4 +262,3 @@ if __name__ == '__main__':
     api_model = 'modelo_groq'
     city_bot = CityBot(api_key, api_model)
     city_bot.menu()
-```
