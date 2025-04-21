@@ -1,0 +1,8 @@
+opencv-python
+pytesseract
+langchain-groq
+pyperclip
+python-docx
+pypdf2
+youtube-transcript-api
+langchain-community
