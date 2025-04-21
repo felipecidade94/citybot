@@ -7,7 +7,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
 import pyperclip
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader, YoutubeLoader
-from docx import Document
+
 
 class CityBot:
     def __init__(self, api_key, api_model):
