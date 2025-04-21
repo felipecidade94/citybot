@@ -33,14 +33,16 @@ O **CityBot** é um assistente virtual inteligente que combina:
 
 ### Pré-requisitos
 ```bash
-pip install -r requirements.txt```
+pip install -r requirements.txt
+```
 
 ## 🏁 Como Usar
 
 ### Configure sua API Key
 ```python
 api_key = 'sua_chave_groq_aqui'
-os.environ['GROQ_API_KEY'] = api_key```
+os.environ['GROQ_API_KEY'] = api_key
+```
 
 ### Execute o bot
 python citybot.py
@@ -65,11 +67,13 @@ CREATE TABLE users (
     name TEXT NOT NULL,
     preferences TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);```
+);
+```
 
 ### 🌟 Exemplo de Uso
 ```python
 # Processando um PDF
 bot = CityBot(api_key, 'llama-3.1-8b-instant')
 pdf_text = bot.carrega_pdf()
-resposta = bot.resposta_bot([('user', 'Resuma este PDF')], pdf_text)```
+resposta = bot.resposta_bot([('user', 'Resuma este PDF')], pdf_text)
+```
