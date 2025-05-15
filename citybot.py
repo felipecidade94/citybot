@@ -257,7 +257,7 @@ class CityBot:
                     break
 
 if __name__ == '__main__':
-    api_key = 'SUA_API_KEY'
+    api_key = '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'
     os.environ['GROQ_API_KEY'] = api_key
     api_model = 'llama-3.3-70b-versatile'
     city_bot = CityBot(api_key, api_model)
