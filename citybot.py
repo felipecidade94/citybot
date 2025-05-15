@@ -257,9 +257,9 @@ class CityBot:
                     break
 
 if __name__ == '__main__':
-    api_key = 'SUA CHAVE AQUI'
+    api_key = 'SUA_API_KEY'
     os.environ['GROQ_API_KEY'] = api_key
-    api_model = 'llama-3.1-8b-instant'
+    api_model = 'llama-3.3-70b-versatile'
     city_bot = CityBot(api_key, api_model)
     city_bot.menu()
     # llama-3.3-70b-versatile
