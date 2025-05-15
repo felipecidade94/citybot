@@ -174,3 +174,4 @@ cython_debug/
 .pypirc
 
 citybot_tests.py
+citybot.db
