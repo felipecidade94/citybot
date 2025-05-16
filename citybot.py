@@ -7,7 +7,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
 import pyperclip
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader, YoutubeLoader
-
+from docx import Document
 
 class CityBot:
     def __init__(self, api_key, api_model):
@@ -67,49 +67,58 @@ class CityBot:
         chain = template | self.chat()
         return chain.invoke({'informacoes': informacoes}).content
 
-    def carrega_site(self):
-        url_site = input('Informe o URL do site: ').strip()
-        loader = WebBaseLoader(url_site)
-        documento = ''.join(doc.page_content for doc in loader.load())
-        return documento
+    def carrega_site(self, url_site):
+        try:
+            loader = WebBaseLoader(url_site)
+            documento = ''.join(doc.page_content for doc in loader.load())
+            return documento
+        except Exception as e:
+            print(f'Erro ao carregar o site: {e}')
+            return ''
 
-    def carrega_video(self):
-        url_video = input('Informe o URL do vídeo: ').strip()
-        loader = YoutubeLoader.from_youtube_url(url_video, language=['pt'])
-        documento = ''.join(doc.page_content for doc in loader.load())
-        return documento
+    def carrega_video(self, url_video):
+        try:
+            loader = YoutubeLoader.from_youtube_url(url_video, language=['pt'])
+            documento = ''.join(doc.page_content for doc in loader.load())
+            return documento
+        except Exception as e:
+            print(f'Erro ao carregar o vídeo: {e}')
+            return ''
 
-    def carrega_pdf(self):
-        caminho = input('Informe o caminho do PDF: ').replace('\\', '/').replace('"', '').strip()
-        loader = PyPDFLoader(caminho)
-        documento = ''.join(doc.page_content for doc in loader.load())
-        return documento
+    def carrega_pdf(self, caminho):
+        try:
+            if not os.path.exists(caminho):
+                raise FileNotFoundError(f'Arquivo não encontrado: {caminho}')
+            loader = PyPDFLoader(caminho)
+            documento = ''.join(doc.page_content for doc in loader.load())
+            return documento
+        except Exception as e:
+            print(f'Erro ao carregar o PDF: {e}')
+            return ''
 
-    def carrega_imagem_ocr(self):
-        caminho = input('Informe o caminho da imagem: ').replace('\\', '/').replace('"', '').strip()
-        print('Defina o idioma da imagem:\n1. Portugês\n2. Inglês\n3. Francês\n4. Alemão\n5. Italiano\n6. Espanhol\n7. Japonês\n8. Russo\n9. Coreano\n10. Chinês')
-        idioma = input('Qual o idioma da imagem? ').strip()
-        if idioma not in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
-            print('Idioma inválido!')
-            return
-        idioma = {'1': 'por', '2': 'eng', '3': 'fra', '4': 'deu', '5': 'ita', '6': 'spa', '7': 'jpn', '8': 'rus', '9': 'kor', '10': 'chn'}[idioma]
-        imagem = cv2.imread(caminho)
-        texto = pytesseract.image_to_string(imagem, lang=idioma)
-        print(texto.strip())
-        opc = input('Deseja salvar o texto em um arquivo? [S/N] ').strip().lower()
-        if opc == 's':
-            nome = input('Informe o nome que desejado para salvar o arquivo: ')
+    def carrega_imagem_ocr(self, caminho, nome):
+        try:
+            if not os.path.exists(caminho):
+                raise FileNotFoundError(f'Arquivo não encontrado: {caminho}')
+            imagem = cv2.imread(caminho)
+            texto = pytesseract.image_to_string(imagem)
+            self.salvar_texto(texto, nome)
+            return texto
+        except Exception as e:
+            print(f'Erro ao carregar a imagem: {e}')
+            return ''
+        
+    def salvar_texto(self,texto, nome):
+        try:
             documento = Document()
             documento.add_paragraph(texto)
             documento.save(f'{nome}.docx')
             with open(f'{nome}.txt', 'w', encoding='utf-8') as file:
                 file.write(texto)
             return texto
-        elif opc == 'n':
-            return texto
-        else:
-            print('Opção inválida!')
-            return
+        except Exception as e:
+            print(f'Erro ao salvar a imagem: {e}')
+            return ''
 
     def menu(self):
         memory = self.memory
@@ -120,7 +129,7 @@ class CityBot:
         mensagens = [(tipo, conteudo) for tipo, conteudo in self.load_conversations()]
         while True:
             opcao = input('Escolha uma opção: ')
-            if opcao not in '1234567':
+            if opcao not in '123456':
                 print('Opção inválida!')
             else:
                 if opcao == '1':
@@ -165,11 +174,8 @@ class CityBot:
                             print(resposta)
                             pyperclip.copy('')
                 elif opcao == '2':
-                    try:
-                        nova_informacao = self.carrega_site()
-                    except:
-                        print('URL inválido!')
-                        continue
+                    url_site = input('Informe a URL do site: ').strip()
+                    nova_informacao = self.carrega_site(url_site)
                     print('Me faça perguntas sobre esse site. Digite "menu" para voltar ao menu ou "sair" para sair do programa')
                     while True:
                         pergunta = input()
@@ -187,11 +193,8 @@ class CityBot:
                         print()
                         print(resposta)
                 elif opcao == '3':
-                    try:
-                        nova_informacao = self.carrega_video()
-                    except:
-                        print('URL inválido!')
-                        continue
+                    url_video = input('Informe a URL do vídeo: ').strip()
+                    nova_informacao = self.carrega_video(url_video)
                     print('Faça perguntas sobre o vídeo. Digite "menu" para voltar ao menu ou "sair" para sair do programa')
                     while True:
                         pergunta = input('')
@@ -209,11 +212,8 @@ class CityBot:
                         print()
                         print(resposta)
                 elif opcao == '4':
-                    try:
-                        nova_informacao = self.carrega_pdf()
-                    except:
-                        print('Caminho inválido!')
-                        continue
+                    caminho_pdf = input('Informe o caminho do PDF: ').strip().replace('\\', '/').replace('"','')
+                    nova_informacao = self.carrega_pdf(caminho_pdf)
                     print('Me faça perguntas sobre esse PDF. Digite "menu" para voltar ao menu ou "sair" para sair do programa')
                     while True:
                         pergunta = input()
@@ -231,11 +231,9 @@ class CityBot:
                         print()
                         print(resposta)
                 elif opcao == '5':
-                    try:
-                        nova_informacao = self.carrega_imagem_ocr()
-                    except:
-                        print('URL inválido!')
-                        continue
+                    caminho_imagem = input('Informe o caminho da imagem: ').strip().replace('\\', '/').replace('"','')
+                    nome_imagem = input('Informe o nome da imagem: ').strip().replace('\\', '/').replace('"','')
+                    nova_informacao = self.carrega_imagem_ocr(caminho_imagem, nome_imagem)
                     print('OCR imgem. Digite "menu" para voltar ao menu ou "sair" para sair do programa')
                     while True:
                         pergunta = input('')
