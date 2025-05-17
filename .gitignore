@@ -172,13 +172,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-
-citybot_tests.py
-citybot_tests_2.py
-citybot_tests_3.py
-citybot_tests_4.py
-old_citybot.py
 citybot.db
-citybot.py
 teste.docx
 teste.txt
+.env
+old/

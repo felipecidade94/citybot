@@ -8,14 +8,16 @@ from langchain.memory import ConversationBufferWindowMemory
 import pyperclip
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader, YoutubeLoader
 from docx import Document
+from dotenv import load_dotenv 
 
 class CityBot:
-    def __init__(self, api_key, api_model):
-        self.api_key = api_key
-        self.api_model = api_model
+    def __init__(self):
+        load_dotenv()
+        self.api_key = os.getenv('GROQ_API_KEY')
+        self.api_model = os.getenv('GROQ_API_MODEL')
         self.conexao = sqlite3.connect('citybot.db')
         self.create_table()
-        self.memory = ConversationBufferWindowMemory(k=99999)
+        self.memory = ConversationBufferWindowMemory(k=1000000)
 
     def create_table(self):
         with self.conexao:
@@ -255,11 +257,8 @@ class CityBot:
                     break
 
 if __name__ == '__main__':
-    api_key = 'SUA CHAVE GROQ AQUI'
-    # Substitua 'SUA CHAVE GROQ AQUI' pela sua chave de API Groq
-    os.environ['GROQ_API_KEY'] = api_key
-    api_model = 'llama-3.3-70b-versatile'
-    city_bot = CityBot(api_key, api_model)
+    # Não precisa mais definir a api_key aqui
+    city_bot = CityBot()
     city_bot.menu()
     # llama-3.3-70b-versatile
     # llama-3.1-8b-instant
