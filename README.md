@@ -11,7 +11,7 @@ CityBot é um assistente de inteligência artificial desenvolvido em Python que 
 - [CityBot - Assistente Inteligente Multimodal](#citybot---assistente-inteligente-multimodal)
   - [Sumário](#sumário)
   - [Visão da Arquitetura](#visão-da-arquitetura)
-  - [Diagramas de Classes do Chatbot](#diagramas-de-classes-do-chatbot)
+  - [Diagramas de Classes do CityBot](#diagramas-de-classes-do-citybot)
     - [1. Diagrama de Classes - Núcleo do CityBot](#1-diagrama-de-classes---núcleo-do-citybot)
     - [2. Diagrama de Classes - Módulos de Entrada Multimodal](#2-diagrama-de-classes---módulos-de-entrada-multimodal)
   - [Funcionalidades Principais](#funcionalidades-principais)
@@ -57,7 +57,7 @@ graph TD
 
 ---
 
-## Diagramas de Classes do Chatbot
+## Diagramas de Classes do CityBot
 
 ### 1. Diagrama de Classes - Núcleo do CityBot
 ```mermaid
