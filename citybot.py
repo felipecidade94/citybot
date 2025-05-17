@@ -8,7 +8,8 @@ from langchain.memory import ConversationBufferWindowMemory
 import pyperclip
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader, YoutubeLoader
 from docx import Document
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
+from langdetect import detect, LangDetectException
 
 class CityBot:
     def __init__(self):
@@ -80,7 +81,7 @@ class CityBot:
 
     def carrega_video(self, url_video):
         try:
-            loader = YoutubeLoader.from_youtube_url(url_video, language=['pt'])
+            loader = YoutubeLoader.from_youtube_url(url_video)
             documento = ''.join(doc.page_content for doc in loader.load())
             return documento
         except Exception as e:
@@ -103,9 +104,41 @@ class CityBot:
             if not os.path.exists(caminho):
                 raise FileNotFoundError(f'Arquivo não encontrado: {caminho}')
             imagem = cv2.imread(caminho)
-            texto = pytesseract.image_to_string(imagem)
-            self.salvar_texto(texto, nome)
-            return texto
+            imagem_cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+            imagem_tratada = cv2.threshold(imagem_cinza, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+            texto_bruto = pytesseract.image_to_string(imagem_tratada, config='--psm 6')
+            try:
+                idioma = detect(texto_bruto)
+            except LangDetectException:
+                idioma = None
+            map_idioma = {
+                'pt': 'por',
+                'en': 'eng',
+                'es': 'spa',
+                'fr': 'fra',
+                'de': 'deu',
+                'it': 'ita',
+                'ru': 'rus',
+                'ja': 'jpn',
+                'zh-cn': 'chi_sim',
+                'zh-tw': 'chi_tra',
+                'ko': 'kor',
+                'ar': 'ara',
+                'nl': 'nld',
+                'pl': 'pol',
+                'tr': 'tur',
+                'da': 'dan',
+                'fi': 'fin',
+                'sv': 'swe',
+                'no': 'nor',
+            }
+            idioma_tesseract = map_idioma.get(idioma, 'por')
+            if idioma_tesseract:
+                texto_final = pytesseract.image_to_string(imagem_tratada, lang=idioma_tesseract, config='--psm 6')
+            else:
+                texto_final = texto_bruto
+            self.salvar_texto(texto_final, nome)
+            return texto_final
         except Exception as e:
             print(f'Erro ao carregar a imagem: {e}')
             return ''
