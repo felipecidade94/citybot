@@ -290,7 +290,6 @@ class CityBot:
                     break
 
 if __name__ == '__main__':
-    # Não precisa mais definir a api_key aqui
     city_bot = CityBot()
     city_bot.menu()
     # llama-3.3-70b-versatile
