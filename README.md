@@ -11,6 +11,9 @@ CityBot é um assistente de inteligência artificial desenvolvido em Python que 
 - [CityBot - Assistente Inteligente Multimodal](#citybot---assistente-inteligente-multimodal)
   - [Sumário](#sumário)
   - [Visão da Arquitetura](#visão-da-arquitetura)
+  - [Diagramas de Classes do Chatbot](#diagramas-de-classes-do-chatbot)
+    - [1. Diagrama de Classes - Núcleo do CityBot](#1-diagrama-de-classes---núcleo-do-citybot)
+    - [2. Diagrama de Classes - Módulos de Entrada Multimodal](#2-diagrama-de-classes---módulos-de-entrada-multimodal)
   - [Funcionalidades Principais](#funcionalidades-principais)
     - [Processamento de Linguagem Natural](#processamento-de-linguagem-natural)
     - [Processamento Multimodal de Dados](#processamento-multimodal-de-dados)
@@ -35,6 +38,7 @@ CityBot é um assistente de inteligência artificial desenvolvido em Python que 
     - [Interface via Terminal com Menu Interativo](#interface-via-terminal-com-menu-interativo)
     - [Suporte a Clipboard (Área de Transferência)](#suporte-a-clipboard-área-de-transferência)
 
+
 ## Visão da Arquitetura
 
 ```mermaid
@@ -49,6 +53,90 @@ graph TD
     B --> I[Gerenciamento de Memória]
     I --> J[Buffer de Conversação]
     I --> K[Banco de Dados SQLite]
+```
+
+---
+
+## Diagramas de Classes do Chatbot
+
+### 1. Diagrama de Classes - Núcleo do CityBot
+```mermaid
+classDiagram
+    class CityBot {
+        +run()
+        -user
+        -memory
+        -llm
+        -conversation_history
+    }
+
+    class User {
+        +id: int
+        +name: str
+        +preferences: dict
+    }
+
+    class ConversationMemory {
+        +add_message()
+        +get_history()
+        -window_size: int
+        -buffer: list
+    }
+
+    class LLMClient {
+        +query(prompt: str): str
+        -api_key: str
+        -model: str
+    }
+
+    class DatabaseManager {
+        +save_user(user)
+        +save_conversation(user, msg)
+        +load_user()
+        +load_conversations()
+        -db_path: str
+    }
+
+    CityBot --> User
+    CityBot --> ConversationMemory
+    CityBot --> LLMClient
+    CityBot --> DatabaseManager
+```
+
+### 2. Diagrama de Classes - Módulos de Entrada Multimodal
+```mermaid
+classDiagram
+    class WebScraper {
+        +load_url(url: str): str
+    }
+
+    class PDFProcessor {
+        +extract_text(file_path: str): str
+    }
+
+    class YouTubeAnalyzer {
+        +transcribe(video_url: str): str
+    }
+
+    class OCRProcessor {
+        +image_to_text(img_path: str): str
+    }
+
+    class ClipboardWatcher {
+        +detect_clipboard(): str
+    }
+
+    class FileManager {
+        +save_text(text, filename)
+        +save_docx(text, filename)
+    }
+
+    CityBot --> WebScraper
+    CityBot --> PDFProcessor
+    CityBot --> YouTubeAnalyzer
+    CityBot --> OCRProcessor
+    CityBot --> ClipboardWatcher
+    CityBot --> FileManager
 ```
 
 ---
@@ -223,7 +311,7 @@ O CityBot pode carregar documentos PDF diretamente do seu sistema, extrair seu c
 
 ### OCR de Imagens
 
-Utilizando Tesseract OCR e OpenCV, o CityBot extrai o texto contido em imagens. O conteúdo reconhecido é salvo automaticamente em `.docx` e `.txt` com o nome especificado. Você pode fazer perguntas sobre o texto extraído.
+Utilizando Tesseract OCR e OpenCV, o CityBot realiza a extração automática do texto presente em imagens, com suporte para a detecção inteligente de múltiplos idiomas. O conteúdo reconhecido é salvo automaticamente nos formatos `.docx` e `.txt`, com o nome especificado pelo usuário. Além disso, você pode interagir fazendo perguntas sobre o texto extraído de forma prática e eficiente.
 
 ### Histórico de Conversas
 
