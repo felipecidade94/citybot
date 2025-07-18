@@ -59,7 +59,7 @@ class CityBot:
 
     def resposta_bot(self, mensagens, documento=''):
         mensagem_sistema = 'Você é um assistente amigável chamado CityBot, capaz de conversar sobre qualquer assunto, inclusive qualquer informação sobre {informacoes}.'
-        informacoes = documento if documento else ''
+        informacoes = documento or ''
         mensagem_modelo = [('system', mensagem_sistema.format(informacoes=informacoes))]
         for tipo, conteudo in mensagens:
             if tipo not in ['user', 'assistant']:
@@ -157,7 +157,7 @@ class CityBot:
         menu = 'MENU\n1. Bora conversar?\n2. Informações sobre um site\n3. Informações sobre um vídeo do YouTube\n4. Informações sobre um PDF\n5. OCR imagem\n6. Sair'
         print(menu)
         nova_informacao = ''
-        mensagens = [(tipo, conteudo) for tipo, conteudo in self.load_conversations()]
+        mensagens = list(self.load_conversations())
         while True:
             opcao = input('Escolha uma opção: ')
             if opcao not in '123456':
