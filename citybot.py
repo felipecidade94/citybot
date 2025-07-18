@@ -55,8 +55,7 @@ class CityBot:
             return self.conexao.execute("SELECT user_message, assistant_response FROM conversations").fetchall()
 
     def chat(self):
-        chat = ChatGroq(model=self.api_model)
-        return chat
+        return ChatGroq(model=self.api_model)
 
     def resposta_bot(self, mensagens, documento=''):
         mensagem_sistema = 'Você é um assistente amigável chamado CityBot, capaz de conversar sobre qualquer assunto, inclusive qualquer informação sobre {informacoes}.'
@@ -73,8 +72,7 @@ class CityBot:
     def carrega_site(self, url_site):
         try:
             loader = WebBaseLoader(url_site)
-            documento = ''.join(doc.page_content for doc in loader.load())
-            return documento
+            return ''.join(doc.page_content for doc in loader.load())
         except Exception as e:
             print(f'Erro ao carregar o site: {e}')
             return ''
@@ -82,8 +80,7 @@ class CityBot:
     def carrega_video(self, url_video):
         try:
             loader = YoutubeLoader.from_youtube_url(url_video)
-            documento = ''.join(doc.page_content for doc in loader.load())
-            return documento
+            return ''.join(doc.page_content for doc in loader.load())
         except Exception as e:
             print(f'Erro ao carregar o vídeo: {e}')
             return ''
@@ -93,8 +90,7 @@ class CityBot:
             if not os.path.exists(caminho):
                 raise FileNotFoundError(f'Arquivo não encontrado: {caminho}')
             loader = PyPDFLoader(caminho)
-            documento = ''.join(doc.page_content for doc in loader.load())
-            return documento
+            return ''.join(doc.page_content for doc in loader.load())
         except Exception as e:
             print(f'Erro ao carregar o PDF: {e}')
             return ''
