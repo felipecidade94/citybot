@@ -16,7 +16,7 @@ class CityBot:
         load_dotenv()
         self.api_key = os.getenv('GROQ_API_KEY')
         self.api_model = os.getenv('GROQ_API_MODEL')
-        self.conexao = sqlite3.connect('citybot.db')
+        self.conexao = sqlite3.connect('city.db')
         self.create_table()
         self.memory = ConversationBufferWindowMemory(k=1000000)
 

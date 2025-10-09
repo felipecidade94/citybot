@@ -172,9 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-citybot.db
+city.db
 teste.docx
 teste.txt
 .env
 old/
 testes/
+interface.py
