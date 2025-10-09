@@ -110,7 +110,6 @@ def salvar(pergunta, resposta):
    memory.save_context({'input': pergunta}, {'output': resposta})
    city.save_conversation(pergunta, resposta)
 
-
 style = ttk.Style()
 style.configure('Custom.TLabel', foreground='black', font=('Arial', 20, 'bold'))
 style.configure('Custom.TButton', padding=1, font=('Arial', 12), foreground='black', background='#add8e6')
